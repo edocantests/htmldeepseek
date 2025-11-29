@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consulta de Inventario AI</title>
+</head>
+<body>
+    <div style="max-width: 600px; margin: 50px auto;">
+        <h2>🔍 Consulta de Inventario Inteligente</h2>
+        <input type="text" id="query" placeholder="Ej: ¿Cuántas Laptop XYZ tenemos en stock?" style="width: 100%; padding: 10px; margin: 10px 0;">
+        <button onclick="consultarInventario()">Consultar</button>
+        <div id="respuesta" style="margin-top: 20px; padding: 15px; border: 1px solid #ddd;"></div>
+    </div>
+
+    <script>
+        async function consultarInventario() {
+            const query = document.getElementById('query').value;
+            const respuesta = document.getElementById('respuesta');
+            
+            respuesta.innerHTML = "Consultando... ⏳";
+            
+            try {
+                const response = await fetch('http://localhost:5678/webhook/inventory-query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+                
+                const data = await response.json();
+                respuesta.innerHTML = `<strong>Respuesta:</strong><br>${data.response}`;
+            } catch (error) {
+                respuesta.innerHTML = "Error al conectar con el sistema.";
+            }
+        }
+    </script>
+</body>
+</html>
